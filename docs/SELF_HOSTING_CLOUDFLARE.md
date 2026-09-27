@@ -11,7 +11,7 @@ Related guides:
 
 - **Node 22.6 or newer** and **pnpm** (`corepack enable` sets it up).
 - **A Cloudflare account with R2 enabled.** Activating R2 requires a payment method on file, even within its free tier — if you have never used R2, open `R2` in the Cloudflare dashboard once.
-- **A DataForSEO account** — see [`DATAFORSEO_API_KEY.md`](./DATAFORSEO_API_KEY.md).
+- **A DataForSEO account to use SEO data features** — you can deploy first and add the key later. See [`DATAFORSEO_API_KEY.md`](./DATAFORSEO_API_KEY.md).
 
 ## 1) Clone your OpenSEO repo
 
@@ -44,7 +44,7 @@ Already logged in from before without the `access:write` scope? Run `pnpm alchem
 
 ## 3) Create `.env.selfhost`
 
-Copy the template and fill in the required values:
+Copy the template and set `ACCESS_ALLOWED_EMAILS` to the people who may sign in. `DATAFORSEO_API_KEY` can be added later:
 
 ```bash
 cp .env.selfhost.example .env.selfhost
@@ -57,6 +57,8 @@ pnpm deploy:selfhost --yes
 ```
 
 This provisions the D1 database, KV namespaces, and R2 bucket, applies the database migrations, deploys the Workers, and creates the Cloudflare Access application protecting it (allowing exactly `ACCESS_ALLOWED_EMAILS`). If the account has no Zero Trust team yet, one is created for you, named after your workers.dev subdomain.
+
+Without `DATAFORSEO_API_KEY`, the app loads but SEO data features remain unavailable. `/api/health` reports this as a warning. After obtaining the key, set it in `.env.selfhost` and rerun `pnpm deploy:selfhost --yes`.
 
 To manage the Access application yourself instead, set `TEAM_DOMAIN` (`https://your-team.cloudflareaccess.com`) and `POLICY_AUD` (the application's audience tag) in `.env.selfhost` — the deploy then provisions no Access resources.
 

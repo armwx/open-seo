@@ -43,11 +43,8 @@ for (const line of readFileSync(envFile, "utf8").split("\n")) {
   const match = /^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*(.*?)\s*$/.exec(line);
   if (match) env[match[1]] = match[2].replace(/^(["'])(.*)\1$/, "$2");
 }
-if (!env.DATAFORSEO_API_KEY) {
-  fail(
-    `${em("DATAFORSEO_API_KEY")} is not set in ${envFile} — see docs/DATAFORSEO_API_KEY.md for how to get one.`,
-  );
-}
+// The app reports a missing DataForSEO key as a setup warning. Deploying the
+// shell first lets self-hosters add their paid provider credentials later.
 // When both are set, the deploy provisions no Access resources (hand-managed
 // application) and needs neither ACCESS_ALLOWED_EMAILS nor the access:write
 // login scope.
